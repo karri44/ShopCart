@@ -1,0 +1,110 @@
+{% load static %}<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="ShopCart: discover electronics and everyday essentials."
+    />
+    <title>{% block title %}ShopCart · Everyday, upgraded{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="{% static 'js/script.js' %}" defer></script>
+  </head>
+  <div
+    id="session-timeout-config"
+    data-activity-url="{% url 'session_activity' %}"
+    data-logout-url="{% url 'logout' %}"
+    data-login-url="{% url 'login' %}"
+    hidden>
+    {% csrf_token %}
+    </div>
+
+    <script src="{% static 'js/session_timeout.js' %}" defer></script>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="announcement">
+      A little upgrade. A lot to love.
+      <span>Free delivery on every demo order ↗</span>
+    </div>
+    <header>
+      <div class="nav wrap">
+        <a class="logo" href="{% url 'home' %}"
+          ><span class="logo-icon">s.</span>shopcart<span class="dot"
+            >●</span
+          ></a
+        >
+        <form class="search" action="{% url 'catalog' %}" role="search">
+          <label class="sr-only" for="search">Search products</label
+          ><span aria-hidden="true">⌕</span
+          ><input
+            id="search"
+            name="q"
+            value="{{ q }}"
+            placeholder="Find your next favourite"
+          /><button aria-label="Search">Search</button>
+        </form>
+        <div class="nav-actions">
+          {% if user.is_authenticated %}<a href="{% url 'orders' %}"
+            >My orders</a
+          >
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}<button class="text-button">Sign out</button>
+          </form>
+          {% else %}<a href="{% url 'login' %}">Sign in</a>{% endif %}<a
+            class="bag"
+            href="{% url 'cart' %}"
+            >Bag <span>{{ cart_count }}</span></a
+          >
+        </div>
+      </div>
+      <nav class="category-nav wrap" aria-label="Product categories">
+        <a href="{% url 'catalog' %}">Explore all</a
+        ><a href="{% url 'catalog' %}?category=mobiles">Mobiles</a
+        ><a href="{% url 'catalog' %}?category=laptops">Laptops</a
+        ><a href="{% url 'catalog' %}?category=tvs">Televisions</a
+        ><a href="{% url 'catalog' %}?category=acs">Air conditioners</a
+        ><a href="{% url 'catalog' %}?category=fashion">Fashion & accessories</a
+        ><span>Thoughtful finds. Everyday prices.</span>
+      </nav>
+    </header>
+    <main id="main" class="wrap">
+      {% if messages %}
+      <div class="messages" aria-live="polite">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}{% block content %}{% endblock %}
+    </main>
+    <footer>
+      <div class="wrap footer-grid">
+        <div>
+          <a class="logo" href="{% url 'home' %}"
+            >shopcart<span class="dot">●</span></a
+          >
+          <p>Good things for your everyday.</p>
+        </div>
+        <div>
+          <strong>Explore</strong><a href="{% url 'catalog' %}">All products</a
+          ><a href="{% url 'cart' %}">Your bag</a>
+        </div>
+        <div>
+          <strong>Your account</strong
+          ><a href="{% url 'orders' %}">Order history</a
+          ><a href="{% url 'signup' %}">Create account</a>
+        </div>
+        <div>
+          <strong>Built to learn. Made to work.</strong>
+          <p>
+            Portfolio demo store. Sample prices and inventory.<br />Cash on
+            delivery checkout; no online payments.
+          </p>
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        © {% now 'Y' %} ShopCart <span>A Django full-stack project</span>
+      </div>
+    </footer>
+  </body>
+</html>
